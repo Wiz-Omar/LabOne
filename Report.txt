@@ -1,0 +1,81 @@
+The method: setRequiredNumber(int nemployee, int starttime, int endtime):
+
+* The specification:
+    - requires: 0 <= nemployee && 0 <= starttime && 0 <= endtime
+    - ensures:   if starttime > endtime
+                 then
+                     the schedule is unchanged
+                 otherwise
+                     for each Hour between starttime <= Hour <= endtime
+                         if the length of workingEmployees is greater than nemployee
+                         then
+                            requiredNumber is set to nemployee and workingEmployees
+                            keeps a number of employees equal to nemployee, discarting the rest
+                         otherwise
+                            requiredNumber is set to nemployee and workingEmployees is unchanged
+                     and the rest of the schedule is unchanged
+    - Input space:
+        1. nemployee in {0, ....., MAX_INT}
+        2. starttime in {0, ....., MAX_INT}
+        3. endtime in {0, ....., MAX_INT}
+
+        Since all parameters have the same input space, we can also have similar partitions:
+        Partition #1: value = 0
+        Partition #2: value > 0
+            - SubPartition #1: 0 < value < schedule size
+            - SubPartition #2: schedule size <= value
+
+        We used both partition to test combinations of the parameters so we tested:
+        1. nemployee =  0, starttime = 5, endtime = 0:
+            Expected: The schedule is unchanged
+        2. nemployee =  3, starttime = 1, endtime = 5:
+            Expected: The requiredNumber is set to 3 for the hours 1 <= hour <= 5 && the rest of the schedule is unchanged
+        3. nemployee =  2, starttime = 1, endtime = 1 and then nemployee =  1, starttime = 0, endtime = 7:
+            Expected: To change the length of workingEmployees to 1 after setting a requiredNumber = 1 of all hours
+            including hour one, assuming that we add addEmployees after the setting requiredNumber = 2 for hour one
+        4. nemployee =  15, starttime = 0, endtime = 100:
+            Expected: The requiredNumber for hours between 0 and 100 is set to 15
+
+        Found bugs:
+            1. A weird bug was found in the case of sending a new requiredNumber of employees that is less than the
+            length of workingEmployees for a certain hour since the method is expected to discard the rest of the
+            workingEmployees leaving only a number equal to requiredNumber, but the method fails to do so. That result
+            can be found when running the test method "testEndTimeIsHigherAndWorkingEmpIsHigherThanRequired()".
+
+            2. Another bug was found when inputting trying to send an endtime value that is higher than the schedule
+            size. This bug is attributed to the non-specific specification of the method's requirements since the
+            method signature did not specify that the input needs to be smaller than the schedule size. We were unsure
+            of what the expected result should be here, but the test results nevertheless in a program halt and an
+            ArrayIndexOutOfBoundsException.
+
+
+The method: nextIncomplete(int currenttime):
+
+* The specification:
+    - requires: currenttime >= 0 && currenttime < size
+    - ensures:
+      if there is an hour in the interval currenttime to size - 1 such that
+         the length of workingEmployees is less that requiredNumber
+      then
+        returns the time of the hour closest to currenttime such that
+        the length of workingEmployees is less that requiredNumber
+      otherwise
+        returns -1
+      and in either case the schedule is unchanged
+
+    - Input space:
+        1. currenttime in {0, ....., size-1}
+
+        Partition #1: currenttime = 0
+        Partition #2: 0 < currenttime < size
+
+        First, we prepare for the test by setting the requiredNumber for all hours except 1, 3, 4, 10 to 3.
+        Then we test:
+        1. currenttime = 0: Expected: 1
+        2. currenttime = 3: Expected: 3
+        3. currenttime = 5: Expected: 10
+        4. currenttime = 14: Expected: -1
+
+        Found bugs:
+            1. Both tests 1 and 2 fails and return the same value, 10, which indicates that the method returns the LAST
+            found incomplete hour rather than the FIRST, as the specification says.

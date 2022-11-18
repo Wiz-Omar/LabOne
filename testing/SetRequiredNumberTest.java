@@ -2,19 +2,12 @@
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.*;
-import java.util.function.IntPredicate;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assumptions.*;
 
-public class WorkScheduleTest {
+public class SetRequiredNumberTest {
     WorkSchedule schedule = new WorkSchedule(10);
 
     @BeforeEach
@@ -74,5 +67,11 @@ public class WorkScheduleTest {
             assertEquals(0, schedule.readSchedule(i).requiredNumber);
             assertEquals(0, schedule.readSchedule(i).workingEmployees.length);
         }
+    }
+
+    @Test
+    public void testEndtimeHigherThanScheduleSize(){
+        schedule.setRequiredNumber(15, 0, 100);
+        assertEquals(15, schedule.readSchedule(11).requiredNumber);
     }
 }
