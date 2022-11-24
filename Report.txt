@@ -79,3 +79,4 @@ The method: nextIncomplete(int currenttime):
         Found bugs:
             1. Both tests 1 and 2 fails and return the same value, 10, which indicates that the method returns the LAST
             found incomplete hour rather than the FIRST, as the specification says.
+

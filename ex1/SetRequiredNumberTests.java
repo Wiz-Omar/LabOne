@@ -7,7 +7,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SetRequiredNumberTest {
+public class SetRequiredNumberTests {
     WorkSchedule schedule = new WorkSchedule(10);
 
     @BeforeEach

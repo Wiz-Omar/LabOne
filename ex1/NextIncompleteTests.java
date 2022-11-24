@@ -1,12 +1,10 @@
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class NextIncompleteTest {
+public class NextIncompleteTests {
     WorkSchedule schedule = new WorkSchedule(15);
     List<String> tempEmployees = Arrays.asList("Felix", "Jonas", "Mo");
     // 0 <= currenttime < size (15)    -  this is the possible input space (domain) for currenttime
