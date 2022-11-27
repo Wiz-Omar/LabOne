@@ -1,0 +1,125 @@
+FOR ex2 WE INCLUDED A FILE NAMED "Flow charts ex2" THAT CONTAINS FLOW CHART IMAGES OF ALL THE METHODS IN ORDER FOR US TO
+LOOK THROUGH AND GUARANTEE THAT WE HAVE ACHIEVED BRANCH COVERAGE. BRANCH COVERAGE GUARANTEES IN TURN THAT WE HAVE
+ACHIEVED STATEMENT COVERAGE SINCE IT'S A STRONGER FORM OF TESTING.
+
+------------------------------------------------------------------------------------------------------------------------
+
+The method: insert(int x):
+
+* The specification:
+    - requires: x is an integer
+    - ensures: if x is not in the set
+               then
+                    if x is the smallest
+                    then
+                        add x at index 0 and shift all other elements one step to the right
+                    else if x is the biggest
+                    then
+                        add x at index (set.size())
+                    otherwise
+                        add x at the correctly ordered position so that the set is in ascending order and shift all
+                        other elements that are larger than x one step to the right
+               otherwise
+                    return and the set is unchanged
+
+Input space:
+    x in {MIN_INT, ..., 0, ..., MAX_INT}
+
+    Partitions based on inout space:
+    Partition #1: value < 0
+    Partition #2: value = 0
+    Partition #3: value > 0
+
+    tests:
+    1. Partition #2: x = 0,
+        Expected: The set has the element 0 only
+    2. Partition #3: x = 5, x = 5 (testing if adding duplicates is possible)
+        Expected: The set has the element 5 only once
+    3. Partition #1 and #3: x = 1, x = -1
+        Expected: The set has (only) two correctly ordered elements: -1, 1
+    4. Partition #1 and #2 and #3: x = 0, x = 0, x = -1000, x = 1000, x = 500
+        Expected: The set has only one zero, and the value -1000 is at index 0 and the values 500 and 1000 are ordered
+        after the value 0
+    5. Not a bug, but a syntax complication; no need to write "else { if (condition)}" because java has
+       an "else if {condition}" already
+
+    Found bugs:
+    1. A bug was found via the seconds test since the original method used to break from the for-loop when a duplicate
+    is found. However, when exiting the loop, the program went to the last line of code that said to add the element to
+    the set with no conditions.
+    2. Another bug was caused by similar implementation when the integer we are trying to insert is less than the
+    current element. That means that the integer should be inserted at a certain index (the current index) and shift
+    all other elements to the right. The method does exactly that, but then breaks (similarly to bug 1) and executes
+    the last line of code that adds the integer to the end of the set with no conditions. The method should instead
+    return since the element is inserted, and we are done.
+
+------------------------------------------------------------------------------------------------------------------------
+
+The method: member(int x):
+
+* The specification_
+    - requires: x is an integer
+    - ensures: if x is in the set
+               then
+                    return true
+               otherwise
+                    return false
+
+Input space:
+    x in {MIN_INT, ..., 0, ..., MAX_INT}
+
+    Partitions based on inout space:
+    Partition #1: value < 0
+    Partition #2: value = 0
+    Partition #3: value > 0
+
+    tests:
+    1. Partition #1 and #3: x = -1000, x = -1, x = 4, x = 1000, x = 9999
+        Expected: return false on all these x-values since the set does not include them.
+        Note that the values x = -1000 and x = -1 and x = 4 are all expected to return false from the first return false
+        clause, while x = 1000 and x = 9999 are expected to execute the second return false line
+    2. Partition #2: x = 0 (testing to look up the first index in the set and a new partition)
+        Expected: return true since the test set includes the integer 0
+    3. Partition #3: x = 6 (testing the highest element in the set)
+        Expected: return true since the test set includes the integer 6
+
+    Found bugs:
+    1. Not a bug, but a syntax complication; no need to write "else { if (condition)}" because java has
+       an "else if {condition}" already
+
+------------------------------------------------------------------------------------------------------------------------
+
+The method DistinctClosed(IntBinaryOperator f):
+
+* The specification:
+    - requires: An IntBinaryOperator object (Means that the object has defined the applyAsInt method)
+    - ensures:  if the result of "f.applyAsInt(x1, x2)"; where x1 and x2 are all possible pairs from the set; is in the set
+                then
+                    returns true
+                otherwise
+                    returns false
+
+    IMPORTANT NOTE: We approached "if for any 2 distinct elements in the set" in a way that means that the pairs are
+                    unordered which means that for example (2, 3) is equivalent to (3, 2) and the latter should
+                    therefore not be checked
+Input space:
+    f is of the Type IntBinaryOperator
+
+    No partitions taken for the input space!
+
+    tests:
+    1. testEmptySet: calling the method on an empty array
+        Expected: return false
+    2. testFalse:
+        Expected: return false for both IntBinaryOperators
+    3. testTrue:
+        Expected: return true for both IntBinaryOperators (1000 + 6 = 1006) and (2 - 1000 = -998)
+
+    Found bugs:
+    1. Since the set does not allow for duplicates, it is unnecessary to check for the condition (vi == vj) if we define
+       j as i+1: (int j = i + 1)
+    2. The method negates the result of "member(f.applyAsInt(vi, vj))" which means that the result is handled falsely,
+       this causes an error in the program and not a halt.
+    2. The method's return values are oppositely placed, as to the expected behaviour, if the negation mentioned in
+       bug 2 was to be corrected, the method would still be wrong since the method would return false when the result
+       of "applyAsInt" is a member of the set.

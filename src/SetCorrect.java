@@ -15,13 +15,11 @@ public class SetCorrect {
     }
     public void insert(int x) {
         for (int i = 0; i < a.size(); i++) {
-            if (a.get(i) > x) {
+            if (a.get(i) == x) {
+                return;
+            } else if (a.get(i) > x) {
                 a.add(i, x);
-                break;
-            } else {
-                if (a.get(i) == x) {
-                    break;
-                }
+                return;
             }
         }
         a.add(x);
@@ -30,10 +28,8 @@ public class SetCorrect {
         for (int i = 0; i < a.size(); i++) {
             if (a.get(i) > x) {
                 return false;
-            } else {
-                if (a.get(i) == x) {
-                    return true;
-                }
+            } else if (a.get(i) == x) {
+                return true;
             }
         }
         return false;
@@ -59,12 +55,13 @@ public class SetCorrect {
     public boolean distinctClosed(IntBinaryOperator f) {
         int vi, vj;
         for (int i = 0; i < a.size(); i++) {
-            for (int j = i; j < a.size(); j++) {
+            for (int j = i+1; j < a.size(); j++) {
                 vi = a.get(i);
                 vj = a.get(j);
-                if (!(member(f.applyAsInt(vi, vj)) || vi == vj)) return false;
+                if (member(f.applyAsInt(vi, vj)))
+                    return true;
             }
         }
-        return true;
+        return false;
     }
 }
