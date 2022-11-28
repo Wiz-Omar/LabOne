@@ -8,6 +8,7 @@ public class DistinctClosedTests {
     static SetCorrect setTest;
     static IntBinaryOperator operatorSum = Integer::sum;
     static IntBinaryOperator operatorSub = (left, right) -> left-right;
+
     @BeforeAll
     static void setUpSet(){
         setTest = new SetCorrect();

@@ -123,16 +123,3 @@ Input space:
     2. The method's return values are oppositely placed, as to the expected behaviour, if the negation mentioned in
        bug 2 was to be corrected, the method would still be wrong since the method would return false when the result
        of "applyAsInt" is a member of the set.
-
-------------------------------------------------------------------------------------------------------------------------
-
-The method: intersect(Set s)
-
-the method returns an error in how many elements it removes. for multiple of the cases the method
-does not remove the correct number of elements from the set. Running set a = {0,2,4,6} intersecting against
-set e = {3,4,5} we get full branch and statement coverage.
-
-method not yet fixed, looking into why elements not removed as intended. Looks like index increments
-when not supposed to and thus elements in sets are not all compared.
-
-Please NOT that the method is not corrected even in SetCorrect, and the report for the bugs is therefore incomplete.
