@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
 import java.util.function.IntBinaryOperator;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,37 +31,32 @@ public class DistinctClosedTests {
     */
     @Test
     public void testEmptySet(){
-        assertFalse(new SetCorrect().distinctClosed(operatorSub));
-        assertFalse(new SetCorrect().distinctClosed(operatorSum));
+        assertTrue(new SetCorrect().distinctClosed(operatorSub));
+        assertTrue(new SetCorrect().distinctClosed(operatorSum));
     }
 
     @Test
-    public void testFalse(){
+    public void testFalseFirstPair(){
         assertFalse(setTest.distinctClosed(operatorSum));
         assertFalse(setTest.distinctClosed(operatorSub));
     }
     @Test
-    public void testTrue(){
-        setTest.insert(1006);
-        setTest.insert(-998);
-        assertTrue(setTest.distinctClosed(operatorSum));
-        assertTrue(setTest.distinctClosed(operatorSub));
+    public void testFalseRandomPair(){
+        SetCorrect set = new SetCorrect();
+        set.insert(-1007);
+        set.insert(0);
+        set.insert(1007);
+        set.insert(1008);
+        assertFalse(set.distinctClosed(operatorSum));
+        assertFalse(set.distinctClosed(operatorSub));
     }
-    /*
-    The pairs
-    -998,2
-    -998,3
-    -998,6
-    -998,1000
-    -998,1006
-    2,3
-    2,6
-    2,1000
-    2,1006
-    3,6
-    3,1000
-    3,1006
-    6,1000
-    6,1006
-    */
+    @Test
+    public void testTrue(){
+        SetCorrect set = new SetCorrect();
+        set.insert(-998);
+        set.insert(0);
+        set.insert(998);
+        //setTest: {-998, 0, 998}
+        assertTrue(set.distinctClosed(operatorSum));
+    }
 }

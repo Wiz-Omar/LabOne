@@ -93,15 +93,12 @@ The method DistinctClosed(IntBinaryOperator f):
 
 * The specification:
     - requires: An IntBinaryOperator object (Means that the object has defined the applyAsInt method)
-    - ensures:  if the result of "f.applyAsInt(x1, x2)"; where x1 and x2 are all possible pairs from the set; is in the set
+    - ensures:  if for any pair x1 and x2 (x1 != x2) from the set, the result of f.applyAsInt(x1, x2) is not in the set
                 then
-                    returns true
-                otherwise
                     returns false
+                otherwise
+                    returns true
 
-    IMPORTANT NOTE: We approached "if for any 2 distinct elements in the set" in a way that means that the pairs are
-                    unordered which means that for example (2, 3) is equivalent to (3, 2) and the latter should
-                    therefore not be checked
 Input space:
     f is of the Type IntBinaryOperator
 
@@ -109,17 +106,31 @@ Input space:
 
     tests:
     1. testEmptySet: calling the method on an empty array
-        Expected: return false
-    2. testFalse:
-        Expected: return false for both IntBinaryOperators
+        Expected: return true
+    2. testFalseFirstPair:
+        Expected: return false for both IntBinaryOperators since even the first pair that isn't equal is not in the set
+    4. testFalseRandomPair:
+        Expected: return false for both IntBinaryOperators since a pair (not the first) is not in the set
     3. testTrue:
-        Expected: return true for both IntBinaryOperators (1000 + 6 = 1006) and (2 - 1000 = -998)
+        Expected: return true for operatorSum
 
     Found bugs:
-    1. Since the set does not allow for duplicates, it is unnecessary to check for the condition (vi == vj) if we define
-       j as i+1: (int j = i + 1)
+    1. Since the set does not allow for duplicates, we can go through the elements and check the equality first, and
+       skip the current loop round since we are comparing the same element, we don't need to return false in this case.
     2. The method negates the result of "member(f.applyAsInt(vi, vj))" which means that the result is handled falsely,
        this causes an error in the program and not a halt.
-    2. The method's return values are oppositely placed, as to the expected behaviour, if the negation mentioned in
-       bug 2 was to be corrected, the method would still be wrong since the method would return false when the result
-       of "applyAsInt" is a member of the set.
+    3. Since we are checking for all pairs of distinct elements, the second nested loop should go through all elements
+       as well. That allows as to get all pairs in the form (a, b) and (b, a).
+
+------------------------------------------------------------------------------------------------------------------------
+
+The method: intersect(Set s)
+
+the method returns an error in how many elements it removes. for multiple of the cases the method
+does not remove the correct number of elements from the set. Running set a = {0,2,4,6} intersecting against
+set e = {3,4,5} we get full branch and statement coverage.
+
+method not yet fixed, looking into why elements not removed as intended. Looks like index increments
+when not supposed to and thus elements in sets are not all compared.
+
+Please NOTE that the method is not corrected even in SetCorrect, and the report for the bugs is therefore incomplete.

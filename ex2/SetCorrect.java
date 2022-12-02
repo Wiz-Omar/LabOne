@@ -35,33 +35,27 @@ public class SetCorrect {
         return false;
     }
     public void intersect(SetCorrect s) {
-        for(int i = 0, j = 0 ; i < a.size() && j < s.a.size();) {
-            if (a.get(i).equals(s.a.get(j))){
-                i++;
-                j++;
-            } else {
-                if (a.get(i) < s.a.get(j)) {
-                    a.remove(i);
-                    i++;
-                } else {
-                    j++;
-                }
+        ArrayList<Integer> tempList = new ArrayList<>();
+
+        for (Integer integer : a) {
+            if (!(s.member(integer))) {
+                tempList.add(integer);
             }
+        }
+        for (Integer num : tempList) {
+            a.remove(num);
         }
     }
     // Try with:
     //   (a, b) -> a + b;
     //   (a, b) -> a - b;
     public boolean distinctClosed(IntBinaryOperator f) {
-        int vi, vj;
-        for (int i = 0; i < a.size(); i++) {
-            for (int j = i+1; j < a.size(); j++) {
-                vi = a.get(i);
-                vj = a.get(j);
-                if (member(f.applyAsInt(vi, vj)))
-                    return true;
+        for (Integer integerOne: a) {
+            for (Integer integerTwo : a) {
+                if (!member(f.applyAsInt(integerOne, integerTwo)) && !integerOne.equals(integerTwo))
+                    return false;
             }
         }
-        return false;
+        return true;
     }
 }

@@ -4,44 +4,43 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 public class IntersectTests {
-
-    Set a;
-    Set b;
-    Set c;
-    Set d;
-    Set e;
-    Set f;
+    SetCorrect a;
+    SetCorrect b;
+    SetCorrect c;
+    SetCorrect d;
+    SetCorrect e;
+    SetCorrect f;
 
 
     @BeforeEach
     void testSets() {
 
-        a = new Set();
+        a = new SetCorrect();
         a.insert(0);
         a.insert(2);
         a.insert(4);
         a.insert(6);
 
-        b = new Set();
+        b = new SetCorrect();
         b.insert(1);
         b.insert(2);
         b.insert(3);
         b.insert(4);
         b.insert(5);
 
-        c = new Set();
+        c = new SetCorrect();
         c.insert(1);
         c.insert(3);
         c.insert(5);
 
-        e = new Set();
+        e = new SetCorrect();
         e.insert(3);
         e.insert(4);
         e.insert(5);
 
-        d = new Set();
+        d = new SetCorrect();
 
-        f = new Set();
+        f = new SetCorrect();
         f.insert(0);
         f.insert(5);
 
@@ -57,7 +56,7 @@ public class IntersectTests {
     @Test
     void IntersectTests2() {
         a.intersect(c);
-        int[] outcome = {2, 4};
+        int[] outcome = {};
         assertArrayEquals(outcome, a.toArray());
     }
 
@@ -85,14 +84,14 @@ public class IntersectTests {
     @Test
     void IntersectTests6() {
         b.intersect(a);
-        int[] outcome = {1, 3, 5};
+        int[] outcome = {2,4};
         assertArrayEquals(outcome, b.toArray());
     }
 
     @Test
     void IntersectTests7() {
         b.intersect(d);
-        int[] outcome = {2, 4};
+        int[] outcome = {};
         assertArrayEquals(outcome, b.toArray());
     }
 
